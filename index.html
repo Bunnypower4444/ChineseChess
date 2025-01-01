@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="../p5/p5-1.9.4.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="utf-8" />
+
+  </head>
+  <body>
+    <main>
+      <canvas id="defaultCanvas0"></canvas>
+      <div class="sidebar">
+        <h3>Settings</h3>
+  
+        <button onclick="switchTurn();">Switch Turn</button>
+
+        <button onclick="undoMove();">Undo Move</button>
+  
+        <button onclick="resetGame();">Reset Game</button>
+  
+        <br>
+  
+        <label for="fenInput">Use Custom Position</label>
+        <input type="text" id="fenInput" placeholder="Enter FEN position">
+        <button onclick="setCustomPosition(document.getElementById('fenInput').value);">Sumbit</button>
+  
+        <br>
+  
+        <label for="allowIllegal">Allow Illegal Moves</label>
+        <input type="checkbox" id="allowIllegal" onclick="setAllowIllegalMoves(this.checked);">
+      </div>
+    </main>
+
+
+    <script src = "out/helpers.js"></script>
+    <script src = "out/chess.js"></script>
+    <script src = "out/sketch.js"></script>
+
+  </body>
+</html>
