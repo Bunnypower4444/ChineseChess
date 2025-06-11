@@ -214,6 +214,17 @@ class Board {
         DrawUtils.line(palaceLeft * gridSpacing + margin, size - margin, 2 * gridSpacing, -2 * gridSpacing);
         DrawUtils.line(palaceLeft * gridSpacing + margin, margin, 2 * gridSpacing, 2 * gridSpacing);
         DrawUtils.line(palaceLeft * gridSpacing + margin, blackPalaceBottom * gridSpacing + margin, 2 * gridSpacing, -2 * gridSpacing);
+        // Starting positions of cannons and pawns
+        function positionMarker(file, rank) {
+            // top left
+            DrawUtils.line(file * gridSpacing + margin - 0.125 * gridSpacing, rank * gridSpacing + margin - 0.125 * gridSpacing, -0.25 * gridSpacing, -0.25 * gridSpacing);
+            // top right
+            DrawUtils.line(file * gridSpacing + margin + 0.125 * gridSpacing, rank * gridSpacing + margin - 0.125 * gridSpacing, 0.25 * gridSpacing, -0.25 * gridSpacing);
+            // bottom right
+            DrawUtils.line(file * gridSpacing + margin + 0.125 * gridSpacing, rank * gridSpacing + margin + 0.125 * gridSpacing, 0.25 * gridSpacing, 0.25 * gridSpacing);
+            // bottom left
+            DrawUtils.line(file * gridSpacing + margin - 0.125 * gridSpacing, rank * gridSpacing + margin + 0.125 * gridSpacing, -0.25 * gridSpacing, 0.25 * gridSpacing);
+        }
         pop();
         // 楚河漢界 (river)
         push();

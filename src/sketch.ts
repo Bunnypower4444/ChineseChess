@@ -1,4 +1,10 @@
 
+//#region Imports
+
+import DrawUtils = p5Utils.DrawUtils;
+
+//#endregion
+
 //#region Globals
 
 let board = new Board();
@@ -22,14 +28,9 @@ const MainFont = "Trebuchet MS";
 function setup()
 {
     // Setup the canvas
-    let h = windowHeight;
-    if (h * WindowAspect > windowWidth) {
-        h = windowWidth / WindowAspect;
-    }
+    let canvasSize = p5Utils.CanvasUtils.aspectToSize(WindowAspect, windowWidth, windowHeight);
 
-    //@ts-expect-error
-    // Bruh this p5.js extension isn't that good...
-    createCanvas(h * WindowAspect, h, document.getElementById("defaultCanvas0"));
+    createCanvas(canvasSize.x, canvasSize.y, document.getElementById("defaultCanvas0") as HTMLCanvasElement);
 }
 
 function draw()

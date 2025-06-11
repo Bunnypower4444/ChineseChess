@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "pretty": true,
+    "outDir": "out"
+  },
+  "references": [
+    { "path": "../p5Utils" }
+  ],
+  "include": [
+    "src/*.ts",
+    "src/**/*.ts"
+  ],
+  "compileOnSave": true,
+}
