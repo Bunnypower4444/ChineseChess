@@ -1,3 +1,4 @@
+
 /**
  * Represents the Chinese Chess board
  */
@@ -40,6 +41,13 @@ class Board
         return [...this.#pieces];
     }
 
+    public * pieceIterator()
+    {
+        for (const piece of this.#pieces) {
+            yield piece;
+        }
+    }
+
     public moves: Move[];
     public movingPlayer = PieceColor.Red;
     public redKing: Piece;
@@ -48,6 +56,10 @@ class Board
     readonly #grid: (Piece | null)[][] = new Array(Board.NumFiles);
     readonly #pieces: Piece[] = [];
     readonly #playedMoves: MoveInfo[] = [];
+
+    #dirty = false;
+    #redInCheck = false; 
+    #blackInCheck = false; 
 
     public constructor()
     {
@@ -119,6 +131,7 @@ class Board
         }
 
         this.#playedMoves.length = 0;
+        this.#dirty = true;
     }
 
     public setPiece(file: number, rank: number, piece: Piece | null)
@@ -145,6 +158,8 @@ class Board
             piece.file = file;
             piece.rank = rank;
         }
+
+        this.#dirty = true;
     }
 
     public getPiece(file: number, rank: number): Piece | null
@@ -158,6 +173,8 @@ class Board
             this.movingPlayer = PieceColor.Black;
         else
             this.movingPlayer = PieceColor.Red;
+
+        this.#dirty = true;
     }
 
     public makeMove(move: Move, final = false)
@@ -173,6 +190,8 @@ class Board
 
         if (final)
             this.#playedMoves.push(new MoveInfo(move, movingPiece, capturedPiece));
+
+        this.#dirty = true;
     }
 
     public undoMove()
@@ -184,6 +203,8 @@ class Board
         this.setPiece(it.move.fromFile, it.move.fromRank, it.movingPiece);
         this.setPiece(it.move.toFile, it.move.toRank, it.capturedPiece);
 
+        this.#dirty = true;
+
         return true;
     }
 
@@ -194,14 +215,24 @@ class Board
 
     public playerInCheck(player: PieceColor)
     {
-        if (player === PieceColor.Black)
-            return this.blackInCheck();
-        else
-            return this.redInCheck();
+        if (!this.#dirty)
+            return player === PieceColor.Black
+                ? this.#blackInCheck : this.#redInCheck;
+
+        this.#dirty = false;
+
+        this.#redInCheck = this.redInCheck();
+        this.#blackInCheck = this.blackInCheck();
+
+        return player === PieceColor.Black
+            ? this.#blackInCheck : this.#redInCheck;
     }
 
     public redInCheck()
     {
+        if (!this.redKing)
+            return false;
+
         if (this.kingsCanSee())
             return true;
 
@@ -215,6 +246,9 @@ class Board
 
     public blackInCheck()
     {
+        if (!this.blackKing)
+            return false;
+
         if (this.kingsCanSee())
             return true;
 
@@ -236,119 +270,6 @@ class Board
                 return false;
 
         return true;
-    }
-
-    /**
-     * Draws the Chinese Chess board in its current state.
-     * @param x X-position of top left corner to draw
-     * @param y Y-position of top left corner to draw
-     * @param size Height of board
-     */
-    public draw(x: number, y: number, size: number)
-    {
-        push();
-        translate(x, y);
-
-        push();
-        // Draw the grid
-        stroke(0);
-        strokeWeight(2);
-        
-        // add 1 to account for margins, but minus 1 because it's the lines, not the squares
-        let boardWidth = size * Board.NumFiles / Board.NumRanks;
-        let gridSpacing = size / Board.NumRanks;
-        let margin = gridSpacing * 0.5;
-
-        // Horizontal lines
-        for (let i = 0; i < Board.NumRanks; i++) {
-            DrawUtils.line(margin, i * gridSpacing + margin, (Board.NumFiles - 1) * gridSpacing, 0);
-        }
-
-        // Vertical lines
-        let riverStart = Board.RiverStart * gridSpacing;
-        for (let i = 1; i < Board.NumFiles - 1; i++)
-        {
-            // split into two lines because of the river
-            DrawUtils.line(i * gridSpacing + margin, margin,
-                0, riverStart);
-            DrawUtils.line(i * gridSpacing + margin, riverStart + gridSpacing + margin,
-                0, riverStart);
-        }
-        // edges
-        DrawUtils.line(margin, margin, 0, (Board.NumRanks - 1) * gridSpacing);
-        DrawUtils.line(boardWidth - margin, margin, 0, (Board.NumRanks - 1) * gridSpacing);
-
-        // Palace
-        let palaceLeft = Math.ceil((Board.NumFiles - 1) / 2) - 1;
-        let redPalaceTop = Board.NumRanks - 3;
-        let blackPalaceBottom = 2;
-        DrawUtils.line(palaceLeft * gridSpacing + margin, redPalaceTop * gridSpacing + margin,
-            2 * gridSpacing, 2 * gridSpacing);
-        DrawUtils.line(palaceLeft * gridSpacing + margin, size - margin,
-            2 * gridSpacing, -2 * gridSpacing);
-
-        DrawUtils.line(palaceLeft * gridSpacing + margin, margin,
-            2 * gridSpacing, 2 * gridSpacing);
-        DrawUtils.line(palaceLeft * gridSpacing + margin, blackPalaceBottom * gridSpacing + margin,
-            2 * gridSpacing, -2 * gridSpacing);
-        
-        // Starting positions of cannons and pawns
-        function positionMarker(file: number, rank: number)
-        {
-            // top left
-            DrawUtils.line(
-                file * gridSpacing + margin - 0.125 * gridSpacing,
-                rank * gridSpacing + margin - 0.125 * gridSpacing,
-                -0.25 * gridSpacing,
-                -0.25 * gridSpacing
-            );
-            // top right
-             DrawUtils.line(
-                file * gridSpacing + margin + 0.125 * gridSpacing,
-                rank * gridSpacing + margin - 0.125 * gridSpacing,
-                0.25 * gridSpacing,
-                -0.25 * gridSpacing
-            );
-            // bottom right
-            DrawUtils.line(
-                file * gridSpacing + margin + 0.125 * gridSpacing,
-                rank * gridSpacing + margin + 0.125 * gridSpacing,
-                0.25 * gridSpacing,
-                0.25 * gridSpacing
-            );
-            // bottom left
-            DrawUtils.line(
-                file * gridSpacing + margin - 0.125 * gridSpacing,
-                rank * gridSpacing + margin + 0.125 * gridSpacing,
-                -0.25 * gridSpacing,
-                0.25 * gridSpacing
-            );
-        }
-
-        
-        
-        pop();
-        
-        // 楚河漢界 (river)
-        push();
-        noStroke();
-        fill(0);
-        DrawUtils.text(MainFont, "漢\n界",
-            Math.floor(Board.NumFiles / 4) * gridSpacing + margin, 0.5 * size, 0.8 * gridSpacing, CENTER, CENTER, -Math.PI / 2);
-        DrawUtils.text(MainFont, "楚\n河",
-            Math.floor(3 * Board.NumFiles / 4) * gridSpacing + margin, 0.5 * size, 0.8 * gridSpacing, CENTER, CENTER, Math.PI / 2);
-        pop();
-
-        // Draw the pieces
-        for (const iterator of this.#pieces) {
-            iterator.draw(
-                margin + iterator.file * gridSpacing,
-                margin + iterator.rank * gridSpacing,
-                0.8 * gridSpacing
-            );
-        }
-
-        pop();
     }
 }
 
@@ -430,15 +351,17 @@ class Piece
         this.rank = rank;
     }
 
-    public draw(x: number, y: number, size: number)
+    public draw(x: number, y: number, size: number,
+        pieceCol: ColorLike = Color.Piece,
+        redCol: ColorLike = Color.Red, blackCol: ColorLike = Color.Black)
     {
         push();
         stroke(0);
         strokeWeight(2);
-        fill("#ecb382");
+        fill(pieceCol);
         circle(x, y, size);
 
-        fill(this.color == PieceColor.Black ? "black" : "red");
+        fill(this.color == PieceColor.Black ? blackCol : redCol);
         noStroke();
         DrawUtils.text(MainFont, this.name, x, y, size * 0.6);
         pop();
