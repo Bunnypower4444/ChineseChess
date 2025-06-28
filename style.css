@@ -1,13 +1,60 @@
 html, body {
   margin: 0;
   padding: 0;
+  background-color: antiquewhite;
 }
 
 canvas {
   display: inline;
+  margin: 0 10px 0 0;
 }
 
 div.sidebar {
   display: inline-block;
   vertical-align: top;
+}
+
+.themered {
+  background-color: lightcoral;
+  color: red;
+}
+
+.themeblack {
+  background-color: lightgray;
+  color: black;
+}
+
+table.pieceNameGuide tr {
+  background-color: hsl(28, 100%, 92%);
+}
+
+table.pieceNameGuide td:nth-child(1) {
+  background-color: hsl(0, 75%, 92%);
+  color: red;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+table.pieceNameGuide tr:nth-of-type(even) td:nth-child(1) {
+  background-color: hsl(0, 62%, 79%);
+}
+
+table.pieceNameGuide tr:nth-of-type(even) td:nth-child(2) {
+  background-color: hsl(28, 79%, 79%);
+  color: black;
+  margin: 0;
+  padding: 0;
+}
+
+table.pieceNameGuide td:nth-child(3) {
+  background-color: hsl(0, 0%, 92%);
+  color: black;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+table.pieceNameGuide tr:nth-of-type(even) td:nth-child(3) {
+  background-color: hsl(0, 0%, 79%);
 }
