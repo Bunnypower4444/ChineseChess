@@ -1,4 +1,18 @@
 
+enum Color
+{
+    Board = "#c16d26",
+    Line = "black",
+    Red = "red",
+    Black = "black",
+    RedBG = "lightcoral",
+    BlackBG = "lightgray",
+    Piece = "#ecb382",
+    Check = "red",
+    Selected = "yellow",
+    MoveIndicator = "rgba(0, 0, 0, 0.5)"
+}
+
 abstract class Panel
 {
     public position: Vec2 = Vec2.zero;
@@ -55,6 +69,18 @@ class BoardPanel extends Panel implements IMouseListener
         this.height = height;
     }
 
+    static readonly #defaultSettings: BoardPanel.Settings =
+    {
+        allowIllegalMoves: false
+    }
+
+    public static getDefaultSettings(): BoardPanel.Settings
+    {
+        return structuredClone(this.#defaultSettings);
+    }
+
+    public settings: BoardPanel.Settings = BoardPanel.getDefaultSettings();
+
     private moveAnimTimer = 0;
     private gameEndAnimTimer = 0;
 
@@ -67,16 +93,16 @@ class BoardPanel extends Panel implements IMouseListener
     static readonly #defaultDrawParams: BoardPanel.DrawParams =
     {
         checkHighlight: true,
-        checkHighlightColor: "red",
+        checkHighlightColor: Color.Check,
         selectedSquare: null,
-        selectedColor: "yellow",
+        selectedColor: Color.Selected,
         showLegalMoves: true,
-        legalMoveColor: [0, 128],
+        legalMoveColor: Color.MoveIndicator,
         highlightedSquares: [],
-        lineColor: "black",
-        pieceColor: "#ecb382",
-        redColor: "red",
-        blackColor: "black"
+        lineColor: Color.Line,
+        pieceColor: Color.Piece,
+        redColor: Color.Red,
+        blackColor: Color.Black
     };
 
     public static getDefaultDrawParams(): BoardPanel.DrawParams
@@ -324,7 +350,7 @@ class BoardPanel extends Panel implements IMouseListener
                 this.drawParams.selectedSquare[0], this.drawParams.selectedSquare[1]
             );
             
-            if (settings.allowIllegalMoves || this.#board.moves.some(m => m.equals(move)))
+            if (this.settings.allowIllegalMoves || this.#board.moves.some(m => m.equals(move)))
             {
                 this.#board.makeMove(move, true);
                 this.#board.switchTurn();
@@ -341,6 +367,15 @@ class BoardPanel extends Panel implements IMouseListener
 
 namespace BoardPanel
 {
+    export type Settings =
+    {
+        /**
+         * If set to true, players may move their pieces to any square and potentially capture their own pieces.
+         * Defaults to false
+         */
+        allowIllegalMoves: boolean
+    }
+
     export type DrawParams =
     {
         /**
@@ -350,7 +385,8 @@ namespace BoardPanel
         checkHighlight: boolean,
         /**
          * The color a king in check should be highlighted in.
-         * Defaults to red
+         * Defaults to `Color.Check`
+         * @see {Color.Check}
          */
         checkHighlightColor: ColorLike,
         
@@ -360,7 +396,8 @@ namespace BoardPanel
         selectedSquare?: [number, number],
 
         /**
-         * The color of the highlight for the selected square. Defaults to yellow
+         * The color of the highlight for the selected square. Defaults to `Color.Selected`
+         * @see {Color.Selected}
          */
         selectedColor: ColorLike,
 
@@ -371,7 +408,8 @@ namespace BoardPanel
         showLegalMoves: boolean,
 
         /**
-         * The color of legal move markers. Defaults to rgba(0, 0, 0, 128)
+         * The color of legal move markers. Defaults to `Color.MoveIndicator`
+         * @see {Color.MoveIndicator}
          */
         legalMoveColor: ColorLike,
 
@@ -384,19 +422,23 @@ namespace BoardPanel
         highlightedSquares: [[number, number], ColorLike][],
         
         /**
-         * The color of the lines and river text on the board. Defaults to black
+         * The color of the lines and river text on the board. Defaults to `Color.Line`
+         * @see {Color.Line}
          */
         lineColor: ColorLike,
         /**
-         * The color of pieces. Defaults to #ecb382
+         * The color of pieces. Defaults to `Color.Piece`
+         * @see {Color.Piece}
          */
         pieceColor: ColorLike,
         /**
-         * The color of text on red pieces. Defaults to red
+         * The color of text on red pieces. Defaults to `Color.Red`
+         * @see {Color.Red}
          */
         redColor: ColorLike,
         /**
-         * The color of text on black pieces. Defaults to black
+         * The color of text on black pieces. Defaults to `Color.Black`
+         * @see {Color.Black}
          */
         blackColor: ColorLike
     }

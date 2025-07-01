@@ -1,3 +1,16 @@
+var Color;
+(function (Color) {
+    Color["Board"] = "#c16d26";
+    Color["Line"] = "black";
+    Color["Red"] = "red";
+    Color["Black"] = "black";
+    Color["RedBG"] = "lightcoral";
+    Color["BlackBG"] = "lightgray";
+    Color["Piece"] = "#ecb382";
+    Color["Check"] = "red";
+    Color["Selected"] = "yellow";
+    Color["MoveIndicator"] = "rgba(0, 0, 0, 0.5)";
+})(Color || (Color = {}));
 class Panel {
     position = Vec2.zero;
     constructor(position) {
@@ -29,6 +42,13 @@ class BoardPanel extends Panel {
         this.board = board;
         this.height = height;
     }
+    static #defaultSettings = {
+        allowIllegalMoves: false
+    };
+    static getDefaultSettings() {
+        return structuredClone(this.#defaultSettings);
+    }
+    settings = BoardPanel.getDefaultSettings();
     moveAnimTimer = 0;
     gameEndAnimTimer = 0;
     update() {
@@ -37,16 +57,16 @@ class BoardPanel extends Panel {
     }
     static #defaultDrawParams = {
         checkHighlight: true,
-        checkHighlightColor: "red",
+        checkHighlightColor: Color.Check,
         selectedSquare: null,
-        selectedColor: "yellow",
+        selectedColor: Color.Selected,
         showLegalMoves: true,
-        legalMoveColor: [0, 128],
+        legalMoveColor: Color.MoveIndicator,
         highlightedSquares: [],
-        lineColor: "black",
-        pieceColor: "#ecb382",
-        redColor: "red",
-        blackColor: "black"
+        lineColor: Color.Line,
+        pieceColor: Color.Piece,
+        redColor: Color.Red,
+        blackColor: Color.Black
     };
     static getDefaultDrawParams() {
         return structuredClone(this.#defaultDrawParams);
@@ -200,7 +220,7 @@ class BoardPanel extends Panel {
         if (pSelectedSquare && this.drawParams.selectedSquare &&
             this.#board.getPiece(pSelectedSquare[0], pSelectedSquare[1]).color === this.#board.movingPlayer) {
             let move = new Move(pSelectedSquare[0], pSelectedSquare[1], this.drawParams.selectedSquare[0], this.drawParams.selectedSquare[1]);
-            if (settings.allowIllegalMoves || this.#board.moves.some(m => m.equals(move))) {
+            if (this.settings.allowIllegalMoves || this.#board.moves.some(m => m.equals(move))) {
                 this.#board.makeMove(move, true);
                 this.#board.switchTurn();
                 this.#board.updateMoves();

@@ -7,83 +7,92 @@
 
   </head>
   <body>
-    <main>
+    <main style="display: flex;">
       <canvas id="defaultCanvas0"></canvas>
+      
       <div class="sidebar">
-        <h3>Settings</h3>
-  
-        <!-- TODO: show who is to move -->
-        <button onclick="switchTurn();">Switch Turn</button>
 
-        <button onclick="undoMove();">Undo Move</button>
-  
-        <button onclick="resetGame();">Reset Game</button>
-  
-        <br>
-  
-        <label for="fenInput">Use Custom Position</label>
-        <input type="text" id="fenInput" placeholder="Enter FEN position">
-        <button onclick="setCustomPosition(document.getElementById('fenInput').value);">Sumbit</button>
-  
-        <br>
+        <div id="movingPlayer" class="banner">
+          Player to move
+        </div>
 
-        <label for="showLegal">Show Legal Moves</label>
-        <input type="checkbox" id="showLegal" checked onclick="setShowLegalMoves(this.checked);">
-        
-        <br>
-        
-        <label for="allowIllegal">Allow Illegal Moves</label>
-        <input type="checkbox" id="allowIllegal" onclick="setAllowIllegalMoves(this.checked);">
-        
-        <br>
-        <br>
+        <div style="margin-left: 10px;">
+          <h3>Settings</h3>
+    
+          <!-- TODO: show who is to move -->
+          <button onclick="switchTurn();">Switch Turn</button>
 
-        <h3>Piece Name Guide</h3>
+          <button onclick="undoMove();">Undo Move</button>
+    
+          <button onclick="resetGame();">Reset Game</button>
+    
+          <br>
+    
+          <label for="fenInput">Use Custom Position</label>
+          <input type="text" id="fenInput" placeholder="Enter FEN position">
+          <button onclick="setCustomPosition(document.getElementById('fenInput').value);">Sumbit</button>
+    
+          <br>
+          <br>
 
-        <table class="pieceNameGuide" style="text-align: center; border-collapse: collapse; border: 0.2em solid black;">
+          <label for="showLegal">Show Legal Moves</label>
+          <input type="checkbox" id="showLegal" checked onclick="setShowLegalMoves(this.checked);">
+          
+          <br>
+          
+          <label for="allowIllegal">Allow Illegal Moves</label>
+          <input type="checkbox" id="allowIllegal" onclick="setAllowIllegalMoves(this.checked);">
+          
+          <br>
+          <br>
 
-          <colgroup>
-            <col style="width: 22px;">
-            <col style="width: 150px;">
-            <col style="width: 22px;">
-          </colgroup>
+          <h3>Piece Name Guide</h3>
 
-          <tr>
-            <td>兵</td>
-            <td>Pawn</td>
-            <td>卒</td>
-          </tr>
-          <tr>
-            <td>仕</td>
-            <td>Advisor</td>
-            <td>士</td>
-          </tr>
-          <tr>
-            <td>相</td>
-            <td>Elephant</td>
-            <td>象</td>
-          </tr>
-          <tr>
-            <td>傌</td>
-            <td>Horse</td>
-            <td>馬</td>
-          </tr>
-          <tr>
-            <td>炮</td>
-            <td>Cannon</td>
-            <td>砲</td>
-          </tr>
-          <tr>
-            <td>俥</td>
-            <td>Chariot</td>
-            <td>車</td>
-          </tr>
-          <tr>
-            <td>帥</td>
-            <td>King</td>
-            <td>將</td>
-          </tr>
-        </table>
+          <table class="pieceNameGuide" style="text-align: center; border-collapse: collapse; border: 0.2em solid black;">
+
+            <colgroup>
+              <col style="width: 22px;">
+              <col style="width: 150px;">
+              <col style="width: 22px;">
+            </colgroup>
+
+            <tr>
+              <td>兵</td>
+              <td>Pawn</td>
+              <td>卒</td>
+            </tr>
+            <tr>
+              <td>仕</td>
+              <td>Advisor</td>
+              <td>士</td>
+            </tr>
+            <tr>
+              <td>相</td>
+              <td>Elephant</td>
+              <td>象</td>
+            </tr>
+            <tr>
+              <td>傌</td>
+              <td>Horse</td>
+              <td>馬</td>
+            </tr>
+            <tr>
+              <td>炮</td>
+              <td>Cannon</td>
+              <td>砲</td>
+            </tr>
+            <tr>
+              <td>俥</td>
+              <td>Chariot</td>
+              <td>車</td>
+            </tr>
+            <tr>
+              <td>帥</td>
+              <td>King</td>
+              <td>將</td>
+            </tr>
+          </table>
+        </div>
       </div>
     </main>
 
