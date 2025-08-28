@@ -1,0 +1,10 @@
+ * Add markers for pawn and cannon starting places
+ * Game end animation
+ * Flip board
+ * Piece move animation
+ * French and Chinese
+ * Move List
+ * Perhaps separate BoardPanel.draw() into a static method that
+    takes in stuff like the board state and draw params
+ * * Could be used for viewing what the board looked like a few moves ago
+        or to see how a piece moves
